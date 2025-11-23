@@ -1,208 +1,320 @@
 <!DOCTYPE html>
 <html lang="ca">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Vocabulari Científic i Mediambiental (5ème SEGPA)</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    :root {
-      --color-primary: #0077b6;
-      --color-secondary: #00b4d8;
-      --color-success: #4ade80;
-      --color-error: #f87171;
-      --color-text-dark: #1f2937;
-      --color-text-light: #f9fafb;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vocabulari Científic i Mediambiental (5ème SEGPA)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Configuració de Tailwind per a una millor visualització */
+        :root {
+            --color-primary: #0077b6; /* Blau fosc per elements principals */
+            --color-secondary: #00b4d8; /* Blau clar per destacar */
+            --color-success: #4ade80; /* Verd */
+            --color-error: #f87171; /* Vermell */
+            --color-text-dark: #1f2937;
+            --color-text-light: #f9fafb;
+        }
 
-    body {
-      font-family: 'Inter', sans-serif;
-      background-color: #f0f4f8;
-    }
+        /* Utilitzem una font clara i de fàcil lectura */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8; /* Fons clar */
+        }
+        
+        /* Estil bàsic del contenidor per centrar */
+        .container-quiz {
+            max-width: 768px;
+            margin: auto;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 1rem;
+        }
 
-    .container-quiz {
-      max-width: 768px;
-      margin: auto;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      padding: 1rem;
-    }
+        /* Estil per a les opcions de resposta */
+        .option-button {
+            transition: all 0.2s ease-in-out;
+            cursor: pointer;
+            padding: 1.25rem; /* Augmentem el padding per millorar l'estètica i el tacte */
+            margin-bottom: 1rem; /* Marge consistent entre botons */
+            border-radius: 0.75rem;
+            font-size: 1.5rem; /* Lletra gran */
+            text-align: left;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
+            border: 2px solid #e5e7eb;
+            background-color: white;
+            color: var(--color-text-dark);
+        }
 
-    .option-button {
-      transition: all 0.2s ease-in-out;
-      cursor: pointer;
-      padding: 1.25rem;
-      margin-bottom: 1rem;
-      border-radius: 0.75rem;
-      font-size: 1.5rem;
-      text-align: left;
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
-      border: 2px solid #e5e7eb;
-      background-color: white;
-      color: var(--color-text-dark);
-    }
+        /* Estats de la resposta */
+        .option-correct {
+            background-color: var(--color-success) !important;
+            border-color: var(--color-success) !important;
+            color: var(--color-text-light) !important;
+        }
 
-    .option-correct {
-      background-color: var(--color-success) !important;
-      border-color: var(--color-success) !important;
-      color: var(--color-text-light) !important;
-    }
+        .option-incorrect {
+            background-color: var(--color-error) !important;
+            border-color: var(--color-error) !important;
+            color: var(--color-text-light) !important;
+        }
 
-    .option-incorrect {
-      background-color: var(--color-error) !important;
-      border-color: var(--color-error) !important;
-      color: var(--color-text-light) !important;
-    }
+        .option-unselected {
+            opacity: 0.5; /* Atenua les opcions no seleccionades després de respondre */
+        }
+        
+        /* Animació senzilla per al missatge de feedback */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
 
-    .option-unselected {
-      opacity: 0.5;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    #feedback-area {
-      animation: fadeIn 0.3s ease-out;
-    }
-  </style>
+        #feedback-area {
+            animation: fadeIn 0.3s ease-out;
+        }
+    </style>
 </head>
 <body>
-  <div class="container-quiz">
-    <div id="quiz-card" class="bg-white p-6 md:p-10 rounded-xl shadow-2xl border-t-8 border-indigo-600 w-full">
-      <h1 class="text-3xl md:text-4xl font-extrabold text-indigo-800 mb-6 text-center">
-        Test de Vocabulari 🧑‍🔬🌳
-      </h1>
 
-      <div id="question-area" class="mb-8">
-        <p id="question-number" class="text-xl font-semibold text-gray-600 mb-3"></p>
-        <h2 id="question-text" class="text-2xl md:text-3xl font-bold text-gray-800 leading-snug">
-          Carregant pregunta...
-        </h2>
-      </div>
+    <!-- Contenidor principal de l'aplicació -->
+    <div class="container-quiz">
+        
+        <!-- Targeta principal del test -->
+        <div id="quiz-card" class="bg-white p-6 md:p-10 rounded-xl shadow-2xl border-t-8 border-indigo-600 w-full">
+            
+            <h1 class="text-3xl md:text-4xl font-extrabold text-indigo-800 mb-6 text-center">
+                Test de Vocabulari 🧑‍🔬🌳
+            </h1>
+            
+            <!-- Àrea de la pregunta -->
+            <div id="question-area" class="mb-8">
+                <p id="question-number" class="text-xl font-semibold text-gray-600 mb-3"></p>
+                <h2 id="question-text" class="text-2xl md:text-3xl font-bold text-gray-800 leading-snug">
+                    Carregant pregunta...
+                </h2>
+            </div>
+            
+            <!-- Àrea de les opcions de resposta -->
+            <!-- S'elimina la classe 'space-y-4' per dependre només del margin-bottom dels botons. -->
+            <div id="options-container">
+                <!-- Les opcions es generen aquí amb JS -->
+            </div>
+            
+            <!-- Àrea de Feedback/Missatge -->
+            <div id="feedback-area" class="mt-8 p-4 md:p-6 rounded-lg text-center font-bold text-2xl md:text-3xl hidden">
+                <!-- El missatge de correcció o "Següent" es mostra aquí -->
+            </div>
+            
+            <!-- Botó per avançar, inicialment ocult -->
+            <button id="next-button" class="mt-8 w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-xl text-xl shadow-lg transform transition duration-150 ease-in-out scale-100 hover:scale-[1.01] hidden" onclick="nextQuestion()">
+                Següent Pregunta (Feu clic aquí)
+            </button>
+            
+        </div>
 
-      <div id="options-container"></div>
-
-      <div id="feedback-area" class="mt-8 p-4 md:p-6 rounded-lg text-center font-bold text-2xl md:text-3xl hidden"></div>
-
-      <button id="next-button" class="mt-8 w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-xl text-xl shadow-lg transform transition duration-150 ease-in-out scale-100 hover:scale-[1.01] hidden" onclick="nextQuestion()">
-        Següent Pregunta (Feu clic aquí)
-      </button>
     </div>
-  </div>
 
-  <script>
-    const questions = [
-      { q: "Què és un decàmetre?", options: ["Una eina per tallar arbres", "Un ocell que viu al riu", "Una cinta llarga per mesurar", "Un tub per agafar aigua"], correct: 2 },
-      { q: "Què és un cordill?", options: ["Un animal petit del riu", "Un tros de corda prima", "Una pedra rodona", "Una bota de muntanya"], correct: 1 },
-      { q: "Què és un esparver (al projecte)?", options: ["Un fil rodó per pescar o agafar coses al riu", "Una eina per tallar terra", "Un ocell petit", "Un barret per a la pluja"], correct: 0 },
-      { q: "Un lloc ombrívol és...", options: ["Amb molta llum", "Tapat, amb ombra", "Molt fred", "Al costat del mar"], correct: 1 },
-      { q: "Un lloc assolellat és...", options: ["On fa fred", "Amb ombra", "Amb molta llum del sol", "Amb neu"], correct: 2 },
-      // ... [continua amb la resta de preguntes del teu array original]
-    ];
+    <script>
+        // Utilitzem un objecte per tenir les dades clares i organitzades.
+        const questions = [
+            { q: "Què és un decàmetre?", options: ["Una eina per tallar arbres", "Un ocell que viu al riu", "Una cinta llarga per mesurar", "Un tub per agafar aigua"], correct: 2 },
+            { q: "Què és un cordill?", options: ["Un animal petit del riu", "Un tros de corda prima", "Una pedra rodona", "Una bota de muntanya"], correct: 1 },
+            { q: "Què és un esparver (al projecte)?", options: ["Un fil rodó per pescar o agafar coses al riu", "Una eina per tallar terra", "Un ocell petit", "Un barret per a la pluja"], correct: 0 },
+            { q: "Un lloc ombrívol és...", options: ["Amb molta llum", "Tapat, amb ombra", "Molt fred", "Al costat del mar"], correct: 1 },
+            { q: "Un lloc assolellat és...", options: ["On fa fred", "Amb ombra", "Amb molta llum del sol", "Amb neu"], correct: 2 },
+            { q: "Què és una riba?", options: ["Una roca", "El costat d’un riu", "Un animal", "Una planta"], correct: 1 },
+            { q: "Una riba consolidada vol dir...", options: ["Amb molta aigua", "Amb blocs o murs per protegir-la", "Amb arbres", "Amb vegetació natural"], correct: 1 },
+            { q: "Una riba segura és...", options: ["On no hi ha cap perill", "On hi ha molts peixos", "On es pesca", "Amb escales"], correct: 0 },
+            { q: "El curs de l’aigua és...", options: ["L’aigua parada", "El camí per on passa el riu", "L’alçada del riu", "L’aigua del mar"], correct: 1 },
+            { q: "El corrent d’aigua és...", options: ["Aigua en moviment", "Aigua congelada", "Aigua sense vida", "Una font"], correct: 0 },
+            { q: "El llit del riu és...", options: ["Un llit per dormir a la vora del riu", "El fons per on corre l’aigua", "El lloc on hi ha vegetació", "El lloc dels peixos"], correct: 1 },
+            { q: "La vegetació és...", options: ["Les pedres", "Els animals del riu", "Les plantes i arbres", "Les fulles mortes"], correct: 2 },
+            { q: "La sorra és...", options: ["Aigua molt bruta", "Terra molt fina", "Una roca gran", "Una planta"], correct: 1 },
+            { q: "La graveta és...", options: ["Sorra fina", "Pedres petites", "Aigua neta", "Una eina"], correct: 1 },
+            { q: "Un guijarro és...", options: ["Un animal", "Una pedra petita i rodona", "Una planta d’aigua", "Un insecte"], correct: 1 },
+            { q: "Un còdol gran és...", options: ["Una pedra grossa i arrodonida", "Una fulla d’arbre", "Un ocell", "Una fusta"], correct: 0 },
+            { q: "Una escullera és...", options: ["Una planta de ribera", "Un lloc per seure", "Un mur de pedres grans per protegir", "Una eina de mesura"], correct: 2 },
+            { q: "Un mur de formigó és...", options: ["Vegetació de riu", "Una construcció dura per canalitzar el riu", "Un animal del bosc", "D. Una barca"], correct: 1 },
+            { q: "El cabal del riu és...", options: ["La velocitat del vent", "El nombre de pedres", "La quantitat d’aigua que baixa", "El soroll que fa"], correct: 2 },
+            { q: "La terbolesa de l’aigua és...", options: ["L’aigua molt neta", "L’aigua amb fang o brutícia", "L’aigua amb sal", "L’aigua amb gel"], correct: 1 },
+            { q: "El pH mesura...", options: ["El fred de l’aigua", "Si l’aigua és àcida o no", "Si hi ha sorra", "El nombre de peixos"], correct: 1 },
+            { q: "La contaminació és...", options: ["Aigua neta", "B. Aigua freda", "Aigua bruta per acció humana", "Aigua d’un llac"], correct: 2 },
+            { q: "La temperatura és...", options: ["El nivell de sorra", "El color de l’aigua", "El fred o calor de l’aigua o l’aire", "El cabal del riu"], correct: 2 },
+            { q: "L’escorrentia és...", options: ["L’aigua que es filtra", "L’aigua que rellisca per la terra cap al riu", "L’aigua que puja", "L’aigua del mar"], correct: 1 },
+            { q: "L’erosió és...", options: ["El creixement d’arbres", "Quan la terra es desfà pel vent o l’aigua", "L’aigua freda", "Quan neva"], correct: 1 },
+            { q: "Una avinguda d’un riu és...", options: ["Un carrer proper al riu", "Quan el riu creix molt i s’omple", "Quan el riu està sec", "Quan hi ha fang"], correct: 1 },
+            { q: "El desgel és...", options: ["Quan l’aigua es fa gel", "Quan es fon la neu i baixa cap al riu", "Quan neva molt", "Quan plou molt"], correct: 1 },
+            { q: "El sòl és...", options: ["El vent", "L’aigua del mar", "La terra que trepitgem o hi ha al costat del riu", "Una roca"], correct: 2 },
+        ];
+        
+        // Estats de l'aplicació
+        let currentQuestionIndex = 0;
+        let isAnswered = false; // Controla si la pregunta ja s'ha respost
+        
+        // --- Configuració de Firebase (Sense emmagatzematge de dades) ---
+        // S'inclou per a la compatibilitat amb l'entorn de Canvas, tot i que no s'utilitza Firestore.
+        let app, db, auth;
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : null;
+        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+        // -----------------------------------------------------------------
 
-    let currentQuestionIndex = 0;
-    let isAnswered = false;
+        // Referències a elements del DOM
+        const questionNumberEl = document.getElementById('question-number');
+        const questionTextEl = document.getElementById('question-text');
+        const optionsContainerEl = document.getElementById('options-container');
+        const feedbackAreaEl = document.getElementById('feedback-area');
+        const nextButtonEl = document.getElementById('next-button');
 
-    const questionNumberEl = document.getElementById('question-number');
-    const questionTextEl = document.getElementById('question-text');
-    const optionsContainerEl = document.getElementById('options-container');
-    const feedbackAreaEl = document.getElementById('feedback-area');
-    const nextButtonEl = document.getElementById('next-button');
-
-    function shuffleArray(array) {
-      for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-      }
-    }
-
-    function renderQuestion() {
-      if (currentQuestionIndex >= questions.length) return showQuizEnd();
-
-      const currentQ = questions[currentQuestionIndex];
-      isAnswered = false;
-      optionsContainerEl.innerHTML = '';
-      feedbackAreaEl.classList.add('hidden');
-      nextButtonEl.classList.add('hidden');
-
-      const optionsData = currentQ.options.map((text, index) => ({
-        text,
-        isCorrect: index === currentQ.correct
-      }));
-      shuffleArray(optionsData);
-
-      questionNumberEl.textContent = `Pregunta ${currentQuestionIndex + 1} de ${questions.length}`;
-      questionTextEl.textContent = currentQ.q;
-
-      optionsData.forEach((option) => {
-        const button = document.createElement('button');
-        button.setAttribute('data-is-correct', option.isCorrect);
-        button.className = 'option-button w-full hover:bg-gray-100';
-        button.innerHTML = option.text;
-        button.onclick = (event) => checkAnswer(event);
-        optionsContainerEl.appendChild(button);
-      });
-    }
-
-    function checkAnswer(event) {
-      if (isAnswered) return nextQuestion();
-
-      isAnswered = true;
-      const selectedButton = event.currentTarget;
-      const isSelectedCorrect = selectedButton.getAttribute('data-is-correct') === 'true';
-      const optionButtons = optionsContainerEl.querySelectorAll('.option-button');
-      let feedbackMessage = '';
-      let correctOptionText = '';
-
-      optionButtons.forEach((btn) => {
-        const isCorrect = btn.getAttribute('data-is-correct') === 'true';
-        if (isCorrect) {
-          btn.classList.add('option-correct');
-          correctOptionText = btn.textContent.trim();
-        } else if (btn !== selectedButton) {
-          btn.classList.add('option-unselected');
+        /**
+         * Funció per barrejar un array (algorisme de Fisher-Yates).
+         * @param {Array<any>} array - L'array a barrejar.
+         */
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                // Intercanvia els elements i i j
+                [array[i], array[j]] = [array[j], array[i]];
+            }
         }
-      });
 
-      if (isSelectedCorrect) {
-        selectedButton.classList.add('option-correct');
-        feedbackMessage = "✅ CORRECTE! Molt bé.";
-        feedbackAreaEl.style.backgroundColor = 'var(--color-success)';
-      } else {
-        selectedButton.classList.add('option-incorrect');
-        feedbackMessage = `❌ ERROR. La resposta correcta és: ${correctOptionText}`;
-        feedbackAreaEl.style.backgroundColor = 'var(--color-error)';
-      }
 
-      feedbackAreaEl.style.color = 'var(--color-text-light)';
-      feedbackAreaEl.textContent = feedbackMessage;
-      feedbackAreaEl.classList.remove('hidden');
-      nextButtonEl.classList.remove('hidden');
-    }
+        /**
+         * Renderitza la pregunta actual i les seves opcions de forma aleatòria.
+         */
+        function renderQuestion() {
+            if (currentQuestionIndex >= questions.length) {
+                showQuizEnd();
+                return;
+            }
 
-    function nextQuestion() {
-      currentQuestionIndex++;
-      renderQuestion();
-    }
+            const currentQ = questions[currentQuestionIndex];
+            
+            // Neteja l'estat anterior
+            isAnswered = false;
+            optionsContainerEl.innerHTML = '';
+            feedbackAreaEl.classList.add('hidden');
+            nextButtonEl.classList.add('hidden');
+            
+            // 1. Prepara les opcions i marca la correcta
+            const optionsData = currentQ.options.map((text, index) => ({
+                text: text,
+                isCorrect: index === currentQ.correct // Aquesta és la clau de correcció
+            }));
+            
+            // 2. Barreja les opcions per a una visualització aleatòria
+            shuffleArray(optionsData);
 
-    function showQuizEnd() {
-      questionNumberEl.textContent = '';
-      questionTextEl.textContent = "🥳 TEST FINALITZAT!";
-      optionsContainerEl.innerHTML = `
-        <div class="p-6 bg-yellow-100 text-yellow-800 rounded-lg text-xl md:text-2xl text-center font-semibold">
-          Has arribat al final del test. La correcció es farà manualment després.
-          <br><br>
-          Pots recarregar la pàgina per tornar a començar.
-        </div>`;
-      feedbackAreaEl.classList.add('hidden');
-      nextButtonEl.classList.add('hidden');
-    }
+            // Actualitza el text de la pregunta
+            questionNumberEl.textContent = `Pregunta ${currentQuestionIndex + 1} de ${questions.length}`;
+            questionTextEl.textContent = currentQ.q;
 
-    window.onload = () => renderQuestion();
-  </script>
+            // 3. Crea els botons d'opció
+            optionsData.forEach((option) => {
+                const button = document.createElement('button');
+                // Utilitza un data-attribute per emmagatzemar la correcció (true/false)
+                button.setAttribute('data-is-correct', option.isCorrect); 
+                button.className = 'option-button w-full hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-indigo-300';
+                button.innerHTML = option.text; // Text net
+                // La funció de clic ara només necessita l'esdeveniment
+                button.onclick = (event) => checkAnswer(event); 
+                optionsContainerEl.appendChild(button);
+            });
+        }
+
+        /**
+         * Comprova si la resposta seleccionada és correcta o incorrecta.
+         * @param {Event} event - L'esdeveniment de clic.
+         */
+        function checkAnswer(event) {
+            if (isAnswered) {
+                // Si ja s'ha respost, el clic es considera una petició per avançar.
+                nextQuestion();
+                return;
+            }
+
+            isAnswered = true;
+            const selectedButton = event.currentTarget;
+            const isSelectedCorrect = selectedButton.getAttribute('data-is-correct') === 'true';
+            const optionButtons = optionsContainerEl.querySelectorAll('.option-button');
+            let feedbackMessage = '';
+            let correctOptionText = ''; // Per guardar el text de la resposta correcta
+
+            // 1. Aplica estils i desa el feedback
+            optionButtons.forEach((btn) => {
+                const isCorrect = btn.getAttribute('data-is-correct') === 'true';
+                
+                if (isCorrect) {
+                    btn.classList.add('option-correct');
+                    correctOptionText = btn.textContent.trim();
+                } else if (btn !== selectedButton) {
+                    // Atenua les opcions no seleccionades i incorrectes
+                    btn.classList.add('option-unselected');
+                }
+            });
+
+            // 2. Tracta la resposta seleccionada
+            if (isSelectedCorrect) {
+                // Resposta Correcta
+                selectedButton.classList.remove('option-unselected');
+                selectedButton.classList.add('option-correct');
+                feedbackMessage = "✅ CORRECTE! Molt bé.";
+                feedbackAreaEl.style.backgroundColor = 'var(--color-success)';
+                feedbackAreaEl.style.color = 'var(--color-text-light)';
+            } else {
+                // Resposta Incorrecta
+                selectedButton.classList.remove('option-unselected');
+                selectedButton.classList.add('option-incorrect');
+                
+                // Utilitza el text de la resposta correcta que hem capturat abans
+                feedbackMessage = `❌ ERROR. La resposta correcta és: ${correctOptionText}`;
+                
+                feedbackAreaEl.style.backgroundColor = 'var(--color-error)';
+                feedbackAreaEl.style.color = 'var(--color-text-light)';
+            }
+            
+            // 3. Deshabilita els clics a les opcions (només el clic al botó Next/Feedback avança)
+            optionButtons.forEach(btn => btn.onclick = (e) => checkAnswer(e));
+
+            // 4. Mostra el feedback i el botó "Següent"
+            feedbackAreaEl.textContent = feedbackMessage;
+            feedbackAreaEl.classList.remove('hidden');
+            nextButtonEl.classList.remove('hidden');
+        }
+
+        /**
+         * Avança a la següent pregunta.
+         */
+        function nextQuestion() {
+            currentQuestionIndex++;
+            renderQuestion();
+        }
+
+        /**
+         * Mostra el missatge de finalització del test.
+         */
+        function showQuizEnd() {
+            questionNumberEl.textContent = '';
+            questionTextEl.textContent = "🥳 TEST FINALITZAT!";
+            optionsContainerEl.innerHTML = `
+                <div class="p-6 bg-yellow-100 text-yellow-800 rounded-lg text-xl md:text-2xl text-center font-semibold">
+                    Has arribat al final del test. La correcció es farà manualment després.
+                    <br><br>
+                    Pots recarregar la pàgina per tornar a començar.
+                </div>
+            `;
+            feedbackAreaEl.classList.add('hidden');
+            nextButtonEl.classList.add('hidden');
+        }
+
+        // --- Inicialització de l'aplicació ---
+        window.onload = function() {
+            // Inicialitza la primera pregunta en carregar la pàgina
+            renderQuestion();
+        }
+        
+    </script>
 </body>
 </html>
