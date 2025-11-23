@@ -97,7 +97,6 @@
             </div>
             
             <!-- Àrea de les opcions de resposta -->
-            <!-- S'elimina la classe 'space-y-4' per dependre només del margin-bottom dels botons. -->
             <div id="options-container">
                 <!-- Les opcions es generen aquí amb JS -->
             </div>
@@ -118,6 +117,7 @@
 
     <script>
         // Utilitzem un objecte per tenir les dades clares i organitzades.
+        // Llista COMPLETA de 28 preguntes segons la vostra llista:
         const questions = [
             { q: "Què és un decàmetre?", options: ["Una eina per tallar arbres", "Un ocell que viu al riu", "Una cinta llarga per mesurar", "Un tub per agafar aigua"], correct: 2 },
             { q: "Què és un cordill?", options: ["Un animal petit del riu", "Un tros de corda prima", "Una pedra rodona", "Una bota de muntanya"], correct: 1 },
@@ -136,11 +136,11 @@
             { q: "Un guijarro és...", options: ["Un animal", "Una pedra petita i rodona", "Una planta d’aigua", "Un insecte"], correct: 1 },
             { q: "Un còdol gran és...", options: ["Una pedra grossa i arrodonida", "Una fulla d’arbre", "Un ocell", "Una fusta"], correct: 0 },
             { q: "Una escullera és...", options: ["Una planta de ribera", "Un lloc per seure", "Un mur de pedres grans per protegir", "Una eina de mesura"], correct: 2 },
-            { q: "Un mur de formigó és...", options: ["Vegetació de riu", "Una construcció dura per canalitzar el riu", "Un animal del bosc", "D. Una barca"], correct: 1 },
+            { q: "Un mur de formigó és...", options: ["Vegetació de riu", "Una construcció dura per canalitzar el riu", "Un animal del bosc", "Una barca"], correct: 1 },
             { q: "El cabal del riu és...", options: ["La velocitat del vent", "El nombre de pedres", "La quantitat d’aigua que baixa", "El soroll que fa"], correct: 2 },
             { q: "La terbolesa de l’aigua és...", options: ["L’aigua molt neta", "L’aigua amb fang o brutícia", "L’aigua amb sal", "L’aigua amb gel"], correct: 1 },
             { q: "El pH mesura...", options: ["El fred de l’aigua", "Si l’aigua és àcida o no", "Si hi ha sorra", "El nombre de peixos"], correct: 1 },
-            { q: "La contaminació és...", options: ["Aigua neta", "B. Aigua freda", "Aigua bruta per acció humana", "Aigua d’un llac"], correct: 2 },
+            { q: "La contaminació és...", options: ["Aigua neta", "Aigua freda", "Aigua bruta per acció humana", "Aigua d’un llac"], correct: 2 },
             { q: "La temperatura és...", options: ["El nivell de sorra", "El color de l’aigua", "El fred o calor de l’aigua o l’aire", "El cabal del riu"], correct: 2 },
             { q: "L’escorrentia és...", options: ["L’aigua que es filtra", "L’aigua que rellisca per la terra cap al riu", "L’aigua que puja", "L’aigua del mar"], correct: 1 },
             { q: "L’erosió és...", options: ["El creixement d’arbres", "Quan la terra es desfà pel vent o l’aigua", "L’aigua freda", "Quan neva"], correct: 1 },
@@ -297,10 +297,11 @@
          */
         function showQuizEnd() {
             questionNumberEl.textContent = '';
-            questionTextEl.textContent = "🥳 TEST FINALITZAT!";
+            // El missatge s'actualitza a 28/28
+            questionTextEl.textContent = "🥳 TEST FINALITZAT! 28/28 PREGUNTES FETES.";
             optionsContainerEl.innerHTML = `
                 <div class="p-6 bg-yellow-100 text-yellow-800 rounded-lg text-xl md:text-2xl text-center font-semibold">
-                    Has arribat al final del test. La correcció es farà manualment després.
+                    Has completat totes les preguntes. 
                     <br><br>
                     Pots recarregar la pàgina per tornar a començar.
                 </div>
