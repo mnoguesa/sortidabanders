@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Vocabulari Científic i Mediambiental (5ème SEGPA)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      --color-primary: #0077b6;
+      --color-secondary: #00b4d8;
+      --color-success: #4ade80;
+      --color-error: #f87171;
+      --color-text-dark: #1f2937;
+      --color-text-light: #f9fafb;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f0f4f8;
+    }
+
+    .container-quiz {
+      max-width: 768px;
+      margin: auto;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 1rem;
+    }
+
+    .option-button {
+      transition: all 0.2s ease-in-out;
+      cursor: pointer;
+      padding: 1.25rem;
+      margin-bottom: 1rem;
+      border-radius: 0.75rem;
+      font-size: 1.5rem;
+      text-align: left;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
+      border: 2px solid #e5e7eb;
+      background-color: white;
+      color: var(--color-text-dark);
+    }
+
+    .option-correct {
+      background-color: var(--color-success) !important;
+      border-color: var(--color-success) !important;
+      color: var(--color-text-light) !important;
+    }
+
+    .option-incorrect {
+      background-color: var(--color-error) !important;
+      border-color: var(--color-error) !important;
+      color: var(--color-text-light) !important;
+    }
+
+    .option-unselected {
+      opacity: 0.5;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    #feedback-area {
+      animation: fadeIn 0.3s ease-out;
+    }
+  </style>
+</head>
+<body>
+  <div class="container-quiz">
+    <div id="quiz-card" class="bg-white p-6 md:p-10 rounded-xl shadow-2xl border-t-8 border-indigo-600 w-full">
+      <h1 class="text-3xl md:text-4xl font-extrabold text-indigo-800 mb-6 text-center">
+        Test de Vocabulari 🧑‍🔬🌳
+      </h1>
+
+      <div id="question-area" class="mb-8">
+        <p id="question-number" class="text-xl font-semibold text-gray-600 mb-3"></p>
+        <h2 id="question-text" class="text-2xl md:text-3xl font-bold text-gray-800 leading-snug">
+          Carregant pregunta...
+        </h2>
+      </div>
+
+      <div id="options-container"></div>
+
+      <div id="feedback-area" class="mt-8 p-4 md:p-6 rounded-lg text-center font-bold text-2xl md:text-3xl hidden"></div>
+
+      <button id="next-button" class="mt-8 w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-xl text-xl shadow-lg transform transition duration-150 ease-in-out scale-100 hover:scale-[1.01] hidden" onclick="nextQuestion()">
+        Següent Pregunta (Feu clic aquí)
+      </button>
+    </div>
+  </div>
+
+  <script>
+    const questions = [
+      { q: "Què és un decàmetre?", options: ["Una eina per tallar arbres", "Un ocell que viu al riu", "Una cinta llarga per mesurar", "Un tub per agafar aigua"], correct: 2 },
+      { q: "Què és un cordill?", options: ["Un animal petit del riu", "Un tros de corda prima", "Una pedra rodona", "Una bota de muntanya"], correct: 1 },
+      { q: "Què és un esparver (al projecte)?", options: ["Un fil rodó per pescar o agafar coses al riu", "Una eina per tallar terra", "Un ocell petit", "Un barret per a la pluja"], correct: 0 },
+      { q: "Un lloc ombrívol és...", options: ["Amb molta llum", "Tapat, amb ombra", "Molt fred", "Al costat del mar"], correct: 1 },
+      { q: "Un lloc assolellat és...", options: ["On fa fred", "Amb ombra", "Amb molta llum del sol", "Amb neu"], correct: 2 },
+      // ... [continua amb la resta de preguntes del teu array original]
+    ];
+
+    let currentQuestionIndex = 0;
+    let isAnswered = false;
+
+    const questionNumberEl = document.getElementById('question-number');
+    const questionTextEl = document.getElementById('question-text');
+    const optionsContainerEl = document.getElementById('options-container');
+    const feedbackAreaEl = document.getElementById('feedback-area');
+    const nextButtonEl = document.getElementById('next-button');
+
+    function shuffleArray(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+    }
+
+    function renderQuestion() {
+      if (currentQuestionIndex >= questions.length) return showQuizEnd();
+
+      const currentQ = questions[currentQuestionIndex];
+      isAnswered = false;
+      optionsContainerEl.innerHTML = '';
+      feedbackAreaEl.classList.add('hidden');
+      nextButtonEl.classList.add('hidden');
+
+      const optionsData = currentQ.options.map((text, index) => ({
+        text,
+        isCorrect: index === currentQ.correct
+      }));
+      shuffleArray(optionsData);
+
+      questionNumberEl.textContent = `Pregunta ${currentQuestionIndex + 1} de ${questions.length}`;
+      questionTextEl.textContent = currentQ.q;
+
+      optionsData.forEach((option) => {
+        const button = document.createElement('button');
+        button.setAttribute('data-is-correct', option.isCorrect);
+        button.className = 'option-button w-full hover:bg-gray-100';
+        button.innerHTML = option.text;
+        button.onclick = (event) => checkAnswer(event);
+        optionsContainerEl.appendChild(button);
+      });
+    }
+
+    function checkAnswer(event) {
+      if (isAnswered) return nextQuestion();
+
+      isAnswered = true;
+      const selectedButton = event.currentTarget;
+      const isSelectedCorrect = selectedButton.getAttribute('data-is-correct') === 'true';
+      const optionButtons = optionsContainerEl.querySelectorAll('.option-button');
+      let feedbackMessage = '';
+      let correctOptionText = '';
+
+      optionButtons.forEach((btn) => {
+        const isCorrect = btn.getAttribute('data-is-correct') === 'true';
+        if (isCorrect) {
+          btn.classList.add('option-correct');
+          correctOptionText = btn.textContent.trim();
+        } else if (btn !== selectedButton) {
+          btn.classList.add('option-unselected');
+        }
+      });
+
+      if (isSelectedCorrect) {
+        selectedButton.classList.add('option-correct');
+        feedbackMessage = "✅ CORRECTE! Molt bé.";
+        feedbackAreaEl.style.backgroundColor = 'var(--color-success)';
+      } else {
+        selectedButton.classList.add('option-incorrect');
+        feedbackMessage = `❌ ERROR. La resposta correcta és: ${correctOptionText}`;
+        feedbackAreaEl.style.backgroundColor = 'var(--color-error)';
+      }
+
+      feedbackAreaEl.style.color = 'var(--color-text-light)';
+      feedbackAreaEl.textContent = feedbackMessage;
+      feedbackAreaEl.classList.remove('hidden');
+      nextButtonEl.classList.remove('hidden');
+    }
+
+    function nextQuestion() {
+      currentQuestionIndex++;
+      renderQuestion();
+    }
+
+    function showQuizEnd() {
+      questionNumberEl.textContent = '';
+      questionTextEl.textContent = "🥳 TEST FINALITZAT!";
+      optionsContainerEl.innerHTML = `
+        <div class="p-6 bg-yellow-100 text-yellow-800 rounded-lg text-xl md:text-2xl text-center font-semibold">
+          Has arribat al final del test. La correcció es farà manualment després.
+          <br><br>
+          Pots recarregar la pàgina per tornar a començar.
+        </div>`;
+      feedbackAreaEl.classList.add('hidden');
+      nextButtonEl.classList.add('hidden');
+    }
+
+    window.onload = () => renderQuestion();
+  </script>
+</body>
+</html>
